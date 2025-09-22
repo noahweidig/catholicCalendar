@@ -149,7 +149,10 @@ def _normalise_event(
     description_lines: List[str] = []
     description_pairs = [
         ("Rank", event.get("rankName") or event.get("rank")),
-        ("Liturgical color", event.get("liturgicalColor") or event.get("liturgicalColors")),
+        (
+            "Liturgical color",
+            event.get("liturgicalColor") or event.get("liturgicalColors"),
+        ),
         ("Season", event.get("season") or event.get("liturgicalSeason")),
         ("Type", event.get("type") or event.get("liturgicalType")),
         ("Holy day of obligation", event.get("isHolyDayOfObligation")),
@@ -161,9 +164,13 @@ def _normalise_event(
     if notes:
         description_pairs.append(("Notes", notes))
 
-    commemorations = event.get("commemorations") or event.get("secondaryCelebrations")
+    commemorations = event.get("commemorations") or event.get(
+        "secondaryCelebrations"
+    )
     if commemorations:
-        description_lines.append("Commemorations: " + _stringify(commemorations))
+        description_lines.append(
+            "Commemorations: " + _stringify(commemorations)
+        )
 
     metadata = event.get("metadata") or event.get("meta")
     if metadata:

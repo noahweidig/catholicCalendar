@@ -33,7 +33,16 @@ def fetch_calendar(
     if not script.exists():  # pragma: no cover - defensive branch
         raise FileNotFoundError(f"romcal bridge script not found at {script}")
 
-    command = ["node", str(script), "--year", str(year), "--locale", locale, "--calendar", calendar]
+    command = [
+        "node",
+        str(script),
+        "--year",
+        str(year),
+        "--locale",
+        locale,
+        "--calendar",
+        calendar,
+    ]
     if not include_optional:
         command.append("--no-optional")
     if extra_args:
@@ -50,7 +59,8 @@ def fetch_calendar(
     try:
         payload = json.loads(stdout)
     except json.JSONDecodeError as exc:  # pragma: no cover - defensive branch
-        raise RomcalRuntimeError("romcal bridge script did not return valid JSON") from exc
+        message = "romcal bridge script did not return valid JSON"
+        raise RomcalRuntimeError(message) from exc
 
     if not isinstance(payload, list):  # pragma: no cover - defensive branch
         raise RomcalRuntimeError("romcal bridge script must output a JSON array")

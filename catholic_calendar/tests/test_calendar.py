@@ -69,14 +69,25 @@ def test_build_calendar_contains_expected_events(sample_events):
     events = _extract_events(ics)
     assert len(events) == len(sample_events)
 
-    summaries = {line.split(":", 1)[1] for event in events for line in event if line.startswith("SUMMARY:")}
+    summaries = {
+        line.split(":", 1)[1]
+        for event in events
+        for line in event
+        if line.startswith("SUMMARY:")
+    }
     assert "Mary\\, Mother of God" in summaries
     assert "Easter Sunday" in summaries
 
-    easter_event = next(event for event in events if any(line.endswith("Easter Sunday") for line in event))
+    easter_event = next(
+        event
+        for event in events
+        if any(line.endswith("Easter Sunday") for line in event)
+    )
     dtstart_line = next(line for line in easter_event if line.startswith("DTSTART"))
     assert dtstart_line.endswith("20250420")
-    description_line = next(line for line in easter_event if line.startswith("DESCRIPTION:"))
+    description_line = next(
+        line for line in easter_event if line.startswith("DESCRIPTION:")
+    )
     assert "Commemorations" in description_line
     assert "Season" in description_line
 
