@@ -86,9 +86,23 @@ catholic_calendar 2025 2026 --output docs/general-roman-calendar.ics
    GitHub Pages works well; you can place the file under `docs/` and
    enable Pages for that folder.
 2. Commit the generated file and push to GitHub.  The published URL can
-   then be shared using the `webcal://` protocol.  For example, if the
-   file is available at `https://example.github.io/docs/general-roman-calendar.ics`
-   the subscription link would be `webcal://example.github.io/docs/general-roman-calendar.ics`.
+   then be shared using the `webcal://` protocol.  When forming the
+   subscription link, replace the leading `https://` in the public URL
+   with `webcal://` and keep the remainder of the path unchanged.  For
+   example, a file published at
+   `https://example.github.io/general-roman-calendar.ics` should be
+   shared as `webcal://example.github.io/general-roman-calendar.ics`.
+
+   If you are using the GitHub Pages "docs" folder option for a project
+   site, remember that the deployed URL does **not** contain the `docs/`
+   path segment.  A file committed to `docs/general-roman-calendar.ics`
+   will therefore be available at
+   `https://example.github.io/your-repo/general-roman-calendar.ics`.
+   Converting that to a subscription link yields
+   `webcal://example.github.io/your-repo/general-roman-calendar.ics`.
+   Avoid prefixing the URL with both `webcal://` *and* `https://`; that
+   produces an invalid link (`webcal://https//...`) that calendar clients
+   will refuse to load.
 
 ### Updating the calendar
 

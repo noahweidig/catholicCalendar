@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>General Roman Calendar Feed</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 2rem auto;
+        max-width: 50rem;
+        line-height: 1.6;
+        padding: 0 1rem;
+      }
+      code {
+        background: #f3f4f6;
+        padding: 0.2em 0.4em;
+        border-radius: 0.3em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>General Roman Calendar feed</h1>
+    <p>
+      Download the latest calendar export:
+      <a id="https-link-anchor" href="general-roman-calendar.ics"
+        >general-roman-calendar.ics</a
+      >.
+    </p>
+    <p>
+      Subscribe directly from a calendar app using the
+      <code>webcal://</code> link:
+      <a id="webcal-link-anchor" href="#">webcal://…</a>
+    </p>
+    <noscript>
+      <p>
+        Copy the download link above and replace the leading
+        <code>https://</code> with <code>webcal://</code> to obtain a working
+        subscription URL.
+      </p>
+    </noscript>
+    <h2>Manual subscription steps</h2>
+    <ol>
+      <li>
+        Copy the download link shown above (it will look like
+        <code>https://your-domain/general-roman-calendar.ics</code>).
+      </li>
+      <li>
+        Replace the leading <code>https://</code> with <code>webcal://</code> so
+        the URL starts with <code>webcal://your-domain/…</code>.
+      </li>
+      <li>
+        Paste the updated URL into your calendar application and confirm the
+        subscription.
+      </li>
+    </ol>
+    <script>
+      (function () {
+        var icsPath = "general-roman-calendar.ics";
+        try {
+          var httpsUrl = new URL(icsPath, window.location.href);
+          var webcalUrl = "webcal://" + httpsUrl.host + httpsUrl.pathname;
+          var httpsAnchor = document.getElementById("https-link-anchor");
+          httpsAnchor.href = httpsUrl.href;
+          httpsAnchor.textContent = httpsUrl.href;
+          var webcalAnchor = document.getElementById("webcal-link-anchor");
+          webcalAnchor.href = webcalUrl;
+          webcalAnchor.textContent = webcalUrl;
+        } catch (error) {
+          console.error("Unable to build subscription links", error);
+        }
+      })();
+    </script>
+  </body>
+</html>
