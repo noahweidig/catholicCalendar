@@ -18,6 +18,9 @@ class CalendarConfig:
     prodid: str = "-//Catholic Calendar//General Roman Calendar//EN"
     domain: str = "catholic.calendar"
     timezone: str = "UTC"
+    method: str | None = "PUBLISH"
+    refresh_interval: str | None = "P1D"
+    published_ttl: str | None = "P1D"
 
 
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
@@ -202,9 +205,19 @@ def build_icalendar(
         f"PRODID:{cfg.prodid}",
         "VERSION:2.0",
         "CALSCALE:GREGORIAN",
-        f"X-WR-CALNAME:{_escape_text(cfg.name)}",
-        f"X-WR-TIMEZONE:{_escape_text(cfg.timezone)}",
     ]
+    if cfg.method:
+        lines.append(f"METHOD:{cfg.method}")
+    if cfg.refresh_interval:
+        lines.append(f"REFRESH-INTERVAL;VALUE=DURATION:{cfg.refresh_interval}")
+    if cfg.published_ttl:
+        lines.append(f"X-PUBLISHED-TTL:{cfg.published_ttl}")
+    lines.extend(
+        [
+            f"X-WR-CALNAME:{_escape_text(cfg.name)}",
+            f"X-WR-TIMEZONE:{_escape_text(cfg.timezone)}",
+        ]
+    )
 
     for normalised in normalised_events:
         start = normalised["date"].strftime("%Y%m%d")

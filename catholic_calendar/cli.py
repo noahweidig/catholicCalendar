@@ -10,6 +10,19 @@ from .calendar import CalendarConfig, build_icalendar
 from .romcal_adapter import fetch_calendar
 
 
+def _normalise_optional(value: str | None) -> str | None:
+    """Return ``None`` when the user disables an optional string option."""
+
+    if value is None:
+        return None
+    stripped = value.strip()
+    if not stripped:
+        return None
+    if stripped.lower() == "none":
+        return None
+    return stripped
+
+
 def parse_args(args: Sequence[str] | None = None) -> argparse.Namespace:
     """Parse CLI arguments."""
 
@@ -62,6 +75,30 @@ def parse_args(args: Sequence[str] | None = None) -> argparse.Namespace:
         help="Time zone identifier exposed via X-WR-TIMEZONE (default: UTC).",
     )
     parser.add_argument(
+        "--method",
+        default="PUBLISH",
+        help=(
+            "Value to expose via the calendar METHOD property (default: PUBLISH). "
+            "Pass an empty string to omit the property."
+        ),
+    )
+    parser.add_argument(
+        "--refresh-interval",
+        default="P1D",
+        help=(
+            "Duration advertised through REFRESH-INTERVAL;VALUE=DURATION (default: P1D). "
+            "Pass an empty string to omit the property."
+        ),
+    )
+    parser.add_argument(
+        "--published-ttl",
+        default="P1D",
+        help=(
+            "Duration advertised through X-PUBLISHED-TTL (default: P1D). "
+            "Pass an empty string to omit the property."
+        ),
+    )
+    parser.add_argument(
         "--romcal-script",
         help="Path to a custom romcal bridge script (defaults to the bundled script).",
     )
@@ -94,6 +131,9 @@ def generate_calendar(
     prodid: str = "-//Catholic Calendar//General Roman Calendar//EN",
     domain: str = "catholic.calendar",
     timezone: str = "UTC",
+    method: str | None = "PUBLISH",
+    refresh_interval: str | None = "P1D",
+    published_ttl: str | None = "P1D",
     romcal_script: str | None = None,
 ) -> Path:
     """Generate an ICS file that contains events for the provided years."""
@@ -110,7 +150,15 @@ def generate_calendar(
             )
         )
 
-    calendar_config = CalendarConfig(name=name, prodid=prodid, domain=domain, timezone=timezone)
+    calendar_config = CalendarConfig(
+        name=name,
+        prodid=prodid,
+        domain=domain,
+        timezone=timezone,
+        method=_normalise_optional(method),
+        refresh_interval=_normalise_optional(refresh_interval),
+        published_ttl=_normalise_optional(published_ttl),
+    )
     ics = build_icalendar(events, calendar_config)
     output_path = Path(output)
     output_path.write_text(ics, encoding="utf-8")
@@ -131,6 +179,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         prodid=args.prodid,
         domain=args.domain,
         timezone=args.timezone,
+        method=args.method,
+        refresh_interval=args.refresh_interval,
+        published_ttl=args.published_ttl,
         romcal_script=args.romcal_script,
     )
 
