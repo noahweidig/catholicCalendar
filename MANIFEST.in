@@ -1,1 +1,1 @@
-include tridentine_calendar/*.json
+include catholic_calendar/scripts/*.mjs
