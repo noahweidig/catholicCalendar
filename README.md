@@ -1,51 +1,127 @@
-# Tridentine liturgical calendar calculator
+# Catholic Calendar (Modern Roman Calendar)
 
-This code will calculate the feasts and ferias using the 1962 Roman Catholic
-calendar rubrics.  The code can export the resulting calendar as an `.ics` file
-which can then be imported by any calendar application, including Google
-Calendar, iCalendar, and Yahoo Calendar.  Some events which are not part of the
-1962 rubrics are included on the calendar as well.  These are traditionally
-observed feasts and ferias or popular feasts on the modern calendar such as the
-Feast of Our Lady of Guadalupe, Plough Monday, and the Feast of St. Brigid.  In
-the case that two feasts or ferias coincide, the lower-ranking feast or feria is
-prepended with '›'.  Non-liturgical events are preprended with '»'.
+This project generates an iCalendar feed for the current General Roman
+Calendar using [romcal](https://github.com/romcal/romcal) as the
+liturgical data source.  The generated `.ics` file can be imported into
+any modern calendar application (including Google Calendar, Apple
+Calendar, or Outlook) and can also be published for subscription via a
+`webcal://` link.
 
-A preview of the calendar can be found here: https://joe-antognini.github.io/tridentine-calendar/
+Unlike the original project, which focused on the 1962 (Tridentine)
+calendar, this version embraces the post-Vatican II calendar used today
+throughout the Catholic world.
 
-You can subscribe to the calendar using these links:
+## Features
 
-* This link for an HTTP friendly calendar: `webcal://joe-antognini.github.io/assets/ical/html_tridentine_calendar.ics`
-* This link for a plaintext friendly calendar: `webcal://joe-antognini.github.io/assets/ical/tridentine_calendar.ics`
-
-If you'd like to generate the calendar yourself, follow the instructions below:
+* Wraps the romcal JavaScript library and converts its output into a
+  standards-compliant iCalendar feed.
+* Provides a friendly command line interface for generating `.ics`
+  files for any number of Gregorian years.
+* Produces deterministic event identifiers to make recurring
+  subscriptions behave well.
+* Ships with tests so you can confidently customise the calendar to
+  your needs.
 
 ## Requirements
 
-* Python 3
-* icalendar
+* Python 3.9+
+* Node.js 18+
+* The romcal packages from npm (`@romcal/core`, `@romcal/calendar`, and
+  `romcal`).
 
 ## Installation
 
-Clone the repository to a directory of your choice:
+1. Clone this repository and create a virtual environment (optional but
+   recommended):
 
-```
-$ git clone git@github.com:joe-antognini/tridentine_calendar.git
-```
+   ```bash
+   git clone https://github.com/your-username/catholicCalendar.git
+   cd catholicCalendar
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
 
-Then install using pip
+2. Install the Python package in editable mode:
 
-```
-pip install -e tridentine_calendar/
-```
+   ```bash
+   pip install -e .
+   ```
+
+3. Install the required romcal packages with npm (from the repository
+   root):
+
+   ```bash
+   npm install @romcal/core @romcal/calendar romcal
+   ```
+
+   The bundled `catholic_calendar/scripts/romcal_fetch.mjs` script will
+   use these packages to retrieve liturgical data.
 
 ## Usage
 
+Generate an `.ics` file for one or more years using the `catholic_calendar`
+command line interface:
+
+```bash
+catholic_calendar 2025 2026 --output docs/general-roman-calendar.ics
 ```
-$ tridentine_calendar --output=my_calendar.ics 2019 2020
+
+### Command line options
+
+* `--locale`: Language locale understood by romcal (default: `en`).
+* `--calendar`: romcal calendar identifier. Examples include `general`
+  and `unitedStates`.
+* `--name`: Friendly name shown to calendar clients (default:
+  `General Roman Calendar`).
+* `--domain`: Domain used when constructing deterministic event UIDs.
+* `--timezone`: Value published via the `X-WR-TIMEZONE` calendar
+  property (default: `UTC`).
+* `--exclude-optional`: Skip optional memorials returned by romcal.
+* `--romcal-script`: Provide a path to a custom romcal bridge script if
+  you have special requirements.
+
+### Creating a shareable subscription
+
+1. Generate the `.ics` file and place it in a web-accessible directory.
+   GitHub Pages works well; you can place the file under `docs/` and
+   enable Pages for that folder.
+2. Commit the generated file and push to GitHub.  The published URL can
+   then be shared using the `webcal://` protocol.  For example, if the
+   file is available at `https://example.github.io/docs/general-roman-calendar.ics`
+   the subscription link would be `webcal://example.github.io/docs/general-roman-calendar.ics`.
+
+### Updating the calendar
+
+When a new liturgical year approaches, regenerate the file:
+
+```bash
+catholic_calendar 2025 2026 2027 --output docs/general-roman-calendar.ics
 ```
 
-************
+Commit and publish the updated file so subscribers always receive the
+latest celebrations.
 
-☩  Stat crux dum volvitur orbis. ☩  
+## Running the tests
 
-☧ 
+Ensure development dependencies are installed and then run `pytest`:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+The tests mock the romcal bridge so they can run without Node.js, but a
+manual end-to-end run is recommended after upgrading romcal.
+
+## Customisation tips
+
+* Change the `--locale` and `--calendar` options to adopt diocesan or
+  national calendars supported by romcal.
+* Adjust the calendar metadata using `--name`, `--prodid`, and
+  `--domain` so the feed matches your preferred branding.
+* The Node bridge script lives at `catholic_calendar/scripts/romcal_fetch.mjs`;
+  tweak it if you need to support bespoke romcal installations.
+
+## License
+
+Released under the MIT License.  See `LICENSE` for details.
