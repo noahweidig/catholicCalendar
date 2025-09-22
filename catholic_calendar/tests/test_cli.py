@@ -61,7 +61,12 @@ def test_main_creates_calendar(tmp_output: Path, monkeypatch):
     assert tmp_output.exists()
     ics = tmp_output.read_text(encoding="utf-8")
     events = _extract_events(ics)
-    summaries = {line.split(":", 1)[1] for event in events for line in event if line.startswith("SUMMARY:")}
+    summaries = {
+        line.split(":", 1)[1]
+        for event in events
+        for line in event
+        if line.startswith("SUMMARY:")
+    }
     assert "Mary 2025" in summaries
     assert "Mary 2026" in summaries
 

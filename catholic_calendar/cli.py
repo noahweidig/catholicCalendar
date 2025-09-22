@@ -78,29 +78,32 @@ def parse_args(args: Sequence[str] | None = None) -> argparse.Namespace:
         "--method",
         default="PUBLISH",
         help=(
-            "Value to expose via the calendar METHOD property (default: PUBLISH). "
-            "Pass an empty string to omit the property."
+            "Value to expose via the calendar METHOD property "
+            "(default: PUBLISH). Pass an empty string to omit the property."
         ),
     )
     parser.add_argument(
         "--refresh-interval",
         default="P1D",
         help=(
-            "Duration advertised through REFRESH-INTERVAL;VALUE=DURATION (default: P1D). "
-            "Pass an empty string to omit the property."
+            "Duration advertised through REFRESH-INTERVAL;VALUE=DURATION "
+            "(default: P1D). Pass an empty string to omit the property."
         ),
     )
     parser.add_argument(
         "--published-ttl",
         default="P1D",
         help=(
-            "Duration advertised through X-PUBLISHED-TTL (default: P1D). "
-            "Pass an empty string to omit the property."
+            "Duration advertised through X-PUBLISHED-TTL "
+            "(default: P1D). Pass an empty string to omit the property."
         ),
     )
     parser.add_argument(
         "--romcal-script",
-        help="Path to a custom romcal bridge script (defaults to the bundled script).",
+        help=(
+            "Path to a custom romcal bridge script "
+            "(defaults to the bundled script)."
+        ),
     )
     optional_group = parser.add_mutually_exclusive_group()
     optional_group.add_argument(
