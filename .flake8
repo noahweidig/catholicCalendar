@@ -1,0 +1,18 @@
+[flake8]
+ignore:
+  FI1,
+  E225,
+  W503,
+exclude:
+  build/,
+  dist/,
+  venv/,
+  .eggs/,
+  .git/,
+  .github/,
+  .pytest_cache/,
+  .tox/,
+  tridentine_calendar.egg-info/,
+max-line-length = 88
+per-file-ignores:
+  */tests/test_*.py:D100,D101,D102
