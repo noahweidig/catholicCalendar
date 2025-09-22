@@ -84,6 +84,12 @@ def test_parse_args_allows_customisation():
             "--timezone",
             "America/Chicago",
             "--exclude-optional",
+            "--method",
+            "PUBLISH",
+            "--refresh-interval",
+            "P2D",
+            "--published-ttl",
+            "P3D",
         ]
     )
 
@@ -91,3 +97,6 @@ def test_parse_args_allows_customisation():
     assert args.calendar == "unitedStates"
     assert args.include_optional is False
     assert args.timezone == "America/Chicago"
+    assert args.method == "PUBLISH"
+    assert args.refresh_interval == "P2D"
+    assert args.published_ttl == "P3D"

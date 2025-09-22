@@ -90,3 +90,20 @@ def test_build_calendar_sorts_events(sample_events):
         for event in events
     ]
     assert dates == sorted(dates)
+
+
+def test_build_calendar_includes_subscription_metadata(sample_events):
+    ics = build_icalendar(sample_events, CalendarConfig())
+    header, _ = ics.split("BEGIN:VEVENT", 1)
+    assert "METHOD:PUBLISH" in header
+    assert "REFRESH-INTERVAL;VALUE=DURATION:P1D" in header
+    assert "X-PUBLISHED-TTL:P1D" in header
+
+
+def test_calendar_config_allows_disabling_metadata(sample_events):
+    cfg = CalendarConfig(method=None, refresh_interval=None, published_ttl=None)
+    ics = build_icalendar(sample_events, cfg)
+    header, _ = ics.split("BEGIN:VEVENT", 1)
+    assert "METHOD:" not in header
+    assert "REFRESH-INTERVAL" not in header
+    assert "X-PUBLISHED-TTL" not in header
