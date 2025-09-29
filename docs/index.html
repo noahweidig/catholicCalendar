@@ -5,6 +5,27 @@
   <title>General Roman Calendar – Novus Ordo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <style>
+  @media (max-width: 600px) {
+  main {
+    padding: 1rem;
+  }
+
+  .link-box a {
+    display: block;               /* makes link full-width */
+    width: 100%;                  /* fits container */
+    box-sizing: border-box;       /* respects padding */
+    word-break: break-all;        /* wraps long URLs */
+    font-size: 0.95rem;           /* slightly smaller text */
+  }
+}
+.link-box a {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
     :root {
       --bg-color: #f9fafb;
       --accent-color: #2c5282;      /* deep blue */
